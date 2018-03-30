@@ -1,0 +1,27 @@
+---
+ - name: Add Docker repository
+   yum_repository:
+        name: docker-ce-stable
+        description: Docker CE Stable
+        baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/centos/gpg
+
+ - name: Enable epel-repos
+   yum:
+        name: epel-release
+
+ - name: Install packages
+   yum:
+        name: python-pip, python-jenkins, docker-ce, git
+
+ - name: Start docker service
+   service: 
+        name: docker
+        state: started
+
+ - name: Install libraries
+   pip:
+        name: pip, docker-py, lxml
+        state: latest
+

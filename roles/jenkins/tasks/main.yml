@@ -1,0 +1,34 @@
+---
+- name: Creation directory
+  file: 
+        path: "{{ jenkins.tmp }}"
+        state: directory
+        owner: "{{ jenkins.user_id }}"
+        group: "{{ jenkins.group_id }}"
+
+- name: Prepare Building NITA jenkins image
+  copy: src=Dockerfile dest={{ jenkins.tmp }}
+
+- name: Building NITA jenkins image
+  docker_image:
+        name: "{{ jenkins.image }}"
+        path: "{{ jenkins.tmp }}"
+        state: present
+
+- name: Configuration Jenkins
+  copy: 
+        src: templates/
+        dest: "{{ jenkins.home_dir }}"
+        owner: "{{ jenkins.user_id }}"
+        group: "{{ jenkins.group_id }}"
+#       mode: u=rw,g=r,o=r
+        force: no
+
+- name: Start NITA jenkins container
+  docker_container:
+        name: "{{ jenkins.container }}"
+        hostname: "{{ jenkins.hostname }}"
+        image: "{{ jenkins.image }}"
+        published_ports: "{{ jenkins.port }}:8080"
+        state: started
+        volumes: "{{ jenkins.home_dir }}:/var/jenkins_home"

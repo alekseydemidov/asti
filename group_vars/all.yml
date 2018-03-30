@@ -1,0 +1,21 @@
+# Temporary directories
+jenkins:
+        tmp: /tmp/nita/j/
+        image: nita_jenkins
+        user_id: 1000
+        group_id: 1000
+        container: nita_j
+        hostname: jenkins
+        port: 8080
+        home_dir: /opt/jenkins_home
+        admin: admin
+        admin_pass: admin
+robot:
+        tmp: /tmp/nita/rf/
+        image: nita_robot
+        container: nita_rf
+        hostname: robot
+        data_dir: /opt/data
+git:
+        repo: https://github.com/alekseydemidov/rf-tests.git
+

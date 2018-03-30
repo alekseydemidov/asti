@@ -1,0 +1,43 @@
+---
+- name: Creation directory
+  file: 
+        path: "{{ robot.tmp }}"
+        state: directory
+
+- name: Prepare Building NITA RF image
+  copy: src=Dockerfile dest={{ robot.tmp }}
+
+- name: Keys coping
+  copy: src=.ssh dest={{ robot.tmp }}
+
+- name: Building NITA RF image
+  docker_image:
+        name: "{{ robot.image }}"
+        path: "{{ robot.tmp }}"
+        state: present
+
+- name: Start NITA robot container
+  docker_container:
+        name: "{{ robot.container }}"
+        hostname: "{{ robot.hostname }}"
+        image: "{{ robot.image }}"
+#       published_ports: 22:22
+        state: started
+        volumes: "{{ robot.data_dir }}:/data"
+  register: result
+
+- name: Add node to Jenkins
+  jenkins_node:
+        name: RF_node
+        state: present
+        enabled: yes
+        url_username: "{{ jenkins.admin }}"
+        url_password: "{{ jenkins.admin_pass }}"
+        remoteFS: /data
+        params:
+                port: 22
+                host: "{{ result['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }} "
+                username: root
+                credentialsId: fa9efd77-94d5-4d01-9052-24c179e86e8d
+                maxNumRetries: 1
+                sshHostKeyVerificationStrategy: {"stapler-class": "hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy"}

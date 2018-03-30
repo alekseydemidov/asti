@@ -1,0 +1,20 @@
+---
+ - hosts: host
+   become: yes
+   gather_facts: no
+   roles: 
+        - host
+        - jenkins 
+        - robot
+   tasks:
+        - name: Getting test codes
+          git:
+                dest: "{{ robot.data_dir }}/suites/"
+                repo: "{{ git.repo }}"
+        - name: Creation Jenkins job
+          jenkins_job:
+                name: Run Robot Testing
+                user: "{{ jenkins.admin }}"
+                password: "{{ jenkins.admin_pass }}"
+                state: present
+                config: "{{ lookup('file', '../roles/jenkins/files/jobs/run_robot_test.xml') }}"
