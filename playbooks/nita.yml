@@ -9,7 +9,7 @@
    tasks:
         - name: Getting test codes
           git:
-                dest: "{{ robot.data_dir }}/suites/"
+                dest: "{{ robot.data_dir }}/"
                 repo: "{{ git.repo }}"
         - name: Creation Jenkins job
           jenkins_job:
