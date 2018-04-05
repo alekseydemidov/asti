@@ -32,3 +32,8 @@
         published_ports: "{{ jenkins.port }}:8080"
         state: started
         volumes: "{{ jenkins.home_dir }}:/var/jenkins_home"
+
+- name: Waiting for Jenkins starting
+  pause:
+        minutes: 1
+

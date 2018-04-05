@@ -33,7 +33,7 @@
         enabled: yes
         url_username: "{{ jenkins.admin }}"
         url_password: "{{ jenkins.admin_pass }}"
-        remoteFS: /data
+        remoteFS: /root
         params:
                 port: 22
                 host: "{{ result['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }} "

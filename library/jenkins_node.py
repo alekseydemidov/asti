@@ -125,21 +125,21 @@ def run_module():
                                 exclusive=False,
                                 launcher=jenkins.LAUNCHER_SSH,
                                 launcher_params=module.params['params'])
-			result['message'] += "Node has been created |"
+                        result['message'] += "Node has been created |"
                         result['changed'] = True
 
                 status=(False if server.get_node_info(module.params['name'], depth=0)['offline'] else True)
-		sleep (10) # Delay to starting node
+                sleep (10) # Delay to starting node
                 if module.params['enabled'] > status:
-			result['message'] +=" Node has been enabled |"
+                        result['message'] +=" Node has been enabled |"
                         server.enable_node(module.params['name'])
                         result['changed'] = True
                 elif module.params['enabled'] < status:
-			result['message'] += " Node has been disabled |"
+                        result['message'] += " Node has been disabled |"
                         server.disable_node(module.params['name'])
                         result['changed'] = True
                 else:
-			result['changed'] = False
+                        result['changed'] = False
 
         if module.params['state'] == 'absent'.lower():
                 if not server.node_exists(module.params['name']):
@@ -147,7 +147,7 @@ def run_module():
                         result['message'] = "Node does not exists"
                 else:
                         server.delete_node(module.params['name'])
-			result['message'] = "Node has been removed"
+                        result['message'] = "Node has been removed"
                         result['changed'] = True
 
         module.exit_json(**result)
